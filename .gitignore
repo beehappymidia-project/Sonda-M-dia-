@@ -10,8 +10,8 @@ build/
 dist/
 
 # Prisma
-prisma/dev.db
-prisma/dev.db-journal
+**/*.db
+**/*.db-journal
 
 # Environment
 .env
