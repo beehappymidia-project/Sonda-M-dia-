@@ -29,7 +29,15 @@ export default function MediaKitPage() {
       {/* Hero */}
       <div style={{ background: 'var(--carvao)', borderBottom: '1px solid var(--cinza-3)', padding: '80px 0' }}>
         <div className="container" style={{ textAlign: 'center' }}>
-          <img src="/logo.jpg" alt="SONDA MÍDIA" style={{ height: '56px', width: 'auto', margin: '0 auto 32px', display: 'block' }} />
+          <div style={{ margin: '0 auto 24px', display: 'flex', justifyContent: 'center' }}>
+            <svg width="48" height="48" viewBox="0 0 32 32" fill="none">
+              <circle cx="16" cy="16" r="14" stroke="#FFB703" strokeWidth="1.5" opacity="0.3" />
+              <circle cx="16" cy="16" r="9" stroke="#FFB703" strokeWidth="1.5" opacity="0.5" />
+              <circle cx="16" cy="16" r="4" stroke="#FFB703" strokeWidth="1.5" opacity="0.8" />
+              <circle cx="16" cy="16" r="1.5" fill="#FFB703" />
+              <path d="M16 16 L25.9 10.5" stroke="#FFB703" strokeWidth="1.5" strokeLinecap="round" opacity="0.9" />
+            </svg>
+          </div>
           <h1 style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', fontWeight: 900, color: 'var(--branco)', marginBottom: '16px', lineHeight: 1.15 }}>
             Media Kit 2025
           </h1>
@@ -151,6 +159,7 @@ export default function MediaKitPage() {
           </div>
         </div>
       </div>
+      <AdZone />
     </div>
   )
 }
