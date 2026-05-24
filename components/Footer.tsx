@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import RadarSvg from './RadarSvg'
 
 export default function Footer() {
   const year = new Date().getFullYear()
@@ -9,10 +8,13 @@ export default function Footer() {
         <div className="ftr__top">
           {/* Brand */}
           <div>
-            <div className="ftr__logo">
-              <RadarSvg size={24} />
-              <span>S<span className="gold">◉</span>NDA MÍDIA</span>
-            </div>
+            <Link href="/" style={{ display: 'inline-block', marginBottom: '12px' }}>
+              <img
+                src="/logo.jpg"
+                alt="SONDA MÍDIA"
+                style={{ height: '32px', width: 'auto', display: 'block' }}
+              />
+            </Link>
             <p className="ftr__tagline">
               Jornalismo investigativo independente de Moçambique. Cobertura aprofundada
               sobre poder, sociedade e economia — mais fundo que a notícia.
@@ -42,10 +44,9 @@ export default function Footer() {
           <div className="ftr__col">
             <h4>Multimédia</h4>
             <ul>
-              <li><Link href="/multim%C3%A9dia">Multimédia</Link></li>
-              <li><Link href="/podcast/podcast-economia-mo%C3%A7ambicana-perspectivas">Podcasts</Link></li>
-              <li><Link href="/documentario/documentario-mares-de-mocambique">Documentários</Link></li>
-              <li><Link href="/galeria/galeria-maputo-cidade-contrastes">Galerias</Link></li>
+              <li><Link href="/podcast">Podcasts</Link></li>
+              <li><Link href="/documentario">Documentários</Link></li>
+              <li><Link href="/galeria">Galerias</Link></li>
               <li><Link href="/newsletter">Newsletter</Link></li>
             </ul>
           </div>

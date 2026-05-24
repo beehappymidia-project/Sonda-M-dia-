@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db'
-import { getPhotoUrl } from '@/lib/photos'
+import AdZone from '@/components/AdZone'
+import ArticleCard from '@/components/ArticleCard'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import type { Metadata } from 'next'
@@ -17,11 +18,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: article.title,
     description: article.lead,
-    openGraph: {
-      title: article.title,
-      description: article.lead,
-      images: [getPhotoUrl(article.photoStyle, 'lg')],
-    },
   }
 }
 
@@ -31,16 +27,28 @@ export async function generateStaticParams() {
 }
 
 function formatDate(d: Date) {
-  return new Date(d).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })
+  return new Date(d).toLocaleDateString('pt', { day: '2-digit', month: 'long', year: 'numeric' })
 }
 
-function formatType(a: { isVideo: boolean; isPodcast: boolean; isGallery: boolean; isOpinion: boolean; isLongForm: boolean; format: string }) {
-  if (a.isVideo) return 'Vídeo'
-  if (a.isPodcast) return 'Podcast'
-  if (a.isGallery) return 'Galeria'
-  if (a.isOpinion) return 'Opinião'
-  if (a.isLongForm) return 'Especial'
-  return a.format.charAt(0) + a.format.slice(1).toLowerCase()
+function parseBody(body: string) {
+  return body.split('\n\n').map((para, i) => {
+    if (para.startsWith('## ')) {
+      return <h2 key={i}>{para.replace('## ', '')}</h2>
+    }
+    if (para.startsWith('### ')) {
+      return <h3 key={i}>{para.replace('### ', '')}</h3>
+    }
+    return <p key={i}>{para}</p>
+  })
+}
+
+function getArticleHref(a: { isLongForm: boolean; isVideo: boolean; isPodcast: boolean; isGallery: boolean; isOpinion: boolean; slug: string }) {
+  if (a.isVideo) return `/documentario/${a.slug}`
+  if (a.isPodcast) return `/podcast/${a.slug}`
+  if (a.isGallery) return `/galeria/${a.slug}`
+  if (a.isOpinion) return `/opiniao/${a.slug}`
+  if (a.isLongForm) return `/investigacao/${a.slug}`
+  return `/artigo/${a.slug}`
 }
 
 export default async function ArticlePage({ params }: Props) {
@@ -48,7 +56,6 @@ export default async function ArticlePage({ params }: Props) {
     where: { slug: params.slug },
     include: { author: true },
   })
-
   if (!article) notFound()
 
   const related = await prisma.article.findMany({
@@ -58,159 +65,129 @@ export default async function ArticlePage({ params }: Props) {
     orderBy: { publishedAt: 'desc' },
   })
 
-  const heroImg = getPhotoUrl(article.photoStyle, 'lg')
+  const tags = article.tags ? article.tags.split(',').filter(Boolean).map(t => t.trim()) : []
 
   return (
     <article>
       {/* Hero */}
-      <div style={{
-        height: '520px',
-        backgroundImage: `url(${heroImg})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        position: 'relative',
-      }}>
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.2) 100%)',
-        }} />
+      <div style={{ position: 'relative', height: '520px', overflow: 'hidden' }}>
+        <div className={`photo ${article.photoStyle} grain`} style={{ position: 'absolute', inset: 0 }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0.15) 100%)' }} />
         <div className="container" style={{ position: 'relative', zIndex: 1, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', paddingBottom: '48px' }}>
           <div style={{ maxWidth: '800px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
-              <Link href={`/${article.section.toLowerCase().replace('ã', 'a').replace('á', 'a').replace('é', 'e').replace('í', 'i').replace('ó', 'o').replace('ú', 'u')}`}>
-                <span className="section-label" style={{ fontSize: '12px' }}>{article.section.toUpperCase()}</span>
-              </Link>
-              <span style={{ color: '#555' }}>•</span>
-              <span style={{ fontSize: '12px', color: '#888' }}>{formatType(article)}</span>
-              <span style={{ color: '#555' }}>•</span>
-              <span style={{ fontSize: '12px', color: '#888' }}>{article.readTime} min de leitura</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px', flexWrap: 'wrap' }}>
+              <span className="tag">{article.section}</span>
+              <span className="tag tag--format">{article.format}</span>
+              <span style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.5)' }}>{article.readTime} min de leitura</span>
             </div>
-            <h1 style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: '36px',
-              fontWeight: 900,
-              lineHeight: '1.2',
-              color: '#fff',
-              marginBottom: '16px',
-            }}>
+            <h1 style={{ fontSize: 'clamp(1.5rem, 3vw, 2.6rem)', fontWeight: 900, lineHeight: 1.15, color: 'var(--branco)', marginBottom: '14px' }}>
               {article.title}
             </h1>
-            <p style={{ fontSize: '18px', color: '#ccc', lineHeight: '1.6', marginBottom: '24px' }}>
+            <p style={{ fontSize: '1.05rem', color: 'rgba(255,255,255,0.8)', lineHeight: 1.6, marginBottom: '24px' }}>
               {article.lead}
             </p>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
               <Link href={`/autor/${article.author.slug}`} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div style={{
-                  width: '36px', height: '36px', borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #c9a84c, #6b4a10)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '14px', fontWeight: 700, color: '#fff',
-                }}>
+                <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'var(--ouro)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem', fontWeight: 900, color: 'var(--preto)' }}>
                   {article.author.name.charAt(0)}
                 </div>
                 <div>
-                  <p style={{ fontSize: '13px', fontWeight: 600, color: '#ddd' }}>{article.author.name}</p>
-                  <p style={{ fontSize: '11px', color: '#888' }}>{article.author.role}</p>
+                  <p style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--ouro)' }}>{article.author.name}</p>
+                  <p style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.55)' }}>{article.author.role}</p>
                 </div>
               </Link>
-              <span style={{ color: '#444' }}>•</span>
-              <span style={{ fontSize: '12px', color: '#888' }}>{formatDate(article.publishedAt)}</span>
+              <span style={{ color: 'var(--cinza-2)' }}>·</span>
+              <span style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.5)' }}>{formatDate(article.publishedAt)}</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Content */}
-      <div style={{ padding: '56px 0' }}>
-        <div className="container" style={{ display: 'grid', gridTemplateColumns: '1fr 280px', gap: '64px' }}>
-          {/* Main content */}
-          <div style={{ maxWidth: '700px' }}>
-            <div style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: '18px',
-              lineHeight: '1.85',
-              color: '#d0d0d0',
-            }}>
-              {article.body.split('\n\n').map((para, i) => (
-                <p key={i} style={{ marginBottom: '28px' }}>{para}</p>
-              ))}
-            </div>
-
-            {/* Tags */}
-            {article.tags && (
-              <div style={{ marginTop: '48px', paddingTop: '24px', borderTop: '1px solid #1a1a1a', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                {article.tags.split(',').filter(Boolean).map(tag => (
-                  <span key={tag} style={{
-                    fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em',
-                    textTransform: 'uppercase', color: '#666',
-                    background: '#111', border: '1px solid #222',
-                    padding: '4px 10px', borderRadius: '2px',
-                  }}>
-                    {tag.trim()}
-                  </span>
-                ))}
+      <div style={{ padding: '56px 0 0' }}>
+        <div className="container">
+          <div className="grid-article">
+            {/* TOC Sidebar */}
+            <aside>
+              <div className="chapter-nav" style={{ position: 'sticky', top: '80px' }}>
+                <div className="chapter-nav__head">Neste artigo</div>
+                <ul className="chapter-nav__list">
+                  <li><a href="#introducao"><span className="chapter-nav__num">01</span> Introdução</a></li>
+                  {tags.slice(0, 4).map((tag, i) => (
+                    <li key={tag}><a href={`#${tag.replace(/\s/g, '-')}`}><span className="chapter-nav__num">{String(i + 2).padStart(2, '0')}</span> {tag}</a></li>
+                  ))}
+                </ul>
               </div>
-            )}
+            </aside>
 
-            {/* Author box */}
-            <div style={{
-              marginTop: '48px', padding: '28px', background: '#111', borderRadius: '4px',
-              border: '1px solid #1a1a1a',
-            }}>
-              <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#c9a84c', marginBottom: '16px' }}>
-                Sobre o autor
-              </p>
-              <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
-                <div style={{
-                  width: '56px', height: '56px', borderRadius: '50%', flexShrink: 0,
-                  background: 'linear-gradient(135deg, #c9a84c, #6b4a10)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '20px', fontWeight: 700, color: '#fff',
-                }}>
-                  {article.author.name.charAt(0)}
-                </div>
-                <div>
-                  <p style={{ fontWeight: 700, color: '#e0e0e0', marginBottom: '4px' }}>{article.author.name}</p>
-                  <p style={{ fontSize: '13px', color: '#c9a84c', marginBottom: '12px' }}>{article.author.role}</p>
-                  <p style={{ fontSize: '14px', color: '#777', lineHeight: '1.6' }}>{article.author.bio}</p>
-                  <Link href={`/autor/${article.author.slug}`} style={{
-                    display: 'inline-block', marginTop: '12px',
-                    fontSize: '12px', fontWeight: 600, color: '#c9a84c',
-                    borderBottom: '1px solid #c9a84c', paddingBottom: '1px',
-                  }}>
-                    Ver todos os artigos
-                  </Link>
-                </div>
+            {/* Main Content */}
+            <div>
+              {/* Pullquote */}
+              <div className="pullquote" style={{ marginBottom: '32px' }}>
+                <p className="pullquote__text">&ldquo;{article.lead}&rdquo;</p>
+                <span className="pullquote__cite">— {article.author.name}, {article.author.role}</span>
               </div>
-            </div>
-          </div>
 
-          {/* Sidebar */}
-          <aside>
-            {related.length > 0 && (
-              <div style={{ position: 'sticky', top: '80px' }}>
-                <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#c9a84c', marginBottom: '20px' }}>
-                  Leia também
-                </p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                  {related.map(r => (
-                    <Link key={r.id} href={`/artigo/${r.slug}`} style={{ display: 'block', padding: '0 0 20px', borderBottom: '1px solid #1a1a1a' }}>
-                      <span className="section-label" style={{ fontSize: '10px' }}>{r.section}</span>
-                      <h4 style={{
-                        fontFamily: 'var(--font-serif)',
-                        fontSize: '15px', fontWeight: 700, lineHeight: '1.35',
-                        color: '#ddd', marginTop: '6px',
-                      }}>{r.title}</h4>
-                      <span style={{ fontSize: '11px', color: '#666', marginTop: '6px', display: 'block' }}>{r.readTime} min</span>
-                    </Link>
+              <div className="article-body" id="introducao">
+                {parseBody(article.body)}
+              </div>
+
+              {/* Tags */}
+              {tags.length > 0 && (
+                <div style={{ marginTop: '48px', paddingTop: '20px', borderTop: '1px solid var(--cinza-3)', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  {tags.map(tag => (
+                    <span key={tag} className="tag tag--section">{tag}</span>
                   ))}
                 </div>
+              )}
+
+              {/* Author Box */}
+              <div style={{ marginTop: '40px', padding: '24px', background: 'var(--carvao)', borderRadius: '6px', border: '1px solid var(--cinza-3)' }}>
+                <p style={{ fontSize: '0.62rem', fontWeight: 900, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--ouro)', marginBottom: '14px' }}>
+                  Sobre o Autor
+                </p>
+                <div style={{ display: 'flex', gap: '18px', alignItems: 'flex-start' }}>
+                  <div style={{ width: '52px', height: '52px', borderRadius: '50%', flexShrink: 0, background: 'var(--ouro)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', fontWeight: 900, color: 'var(--preto)' }}>
+                    {article.author.name.charAt(0)}
+                  </div>
+                  <div>
+                    <p style={{ fontWeight: 700, color: 'var(--branco)', marginBottom: '2px' }}>{article.author.name}</p>
+                    <p style={{ fontSize: '0.78rem', color: 'var(--ouro)', marginBottom: '10px' }}>{article.author.role}</p>
+                    <p style={{ fontSize: '0.82rem', color: 'var(--cinza)', lineHeight: 1.6 }}>{article.author.bio.substring(0, 200)}...</p>
+                    <Link href={`/autor/${article.author.slug}`} style={{ display: 'inline-block', marginTop: '10px', fontSize: '0.72rem', fontWeight: 700, color: 'var(--ouro)', borderBottom: '1px solid var(--ouro)', paddingBottom: '1px' }}>
+                      Ver todos os artigos
+                    </Link>
+                  </div>
+                </div>
               </div>
-            )}
-          </aside>
+            </div>
+
+            {/* Right Sidebar */}
+            <aside className="sidebar">
+              <div className="sidebar__widget">
+                <div className="sidebar__widget-head">Leia também</div>
+                <div className="sidebar__widget-body">
+                  <ul className="sidebar__list">
+                    {related.map(r => (
+                      <li key={r.id}>
+                        <Link href={getArticleHref(r)}>{r.title}</Link>
+                        <span style={{ display: 'block', fontSize: '0.68rem', color: 'var(--cinza)', marginTop: '2px' }}>{r.readTime} min · {r.section}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <div className="ad ad--mpu" style={{ alignSelf: 'start' }}>
+                <span className="ad__label">MPU</span>
+                <span className="ad__size">300×250</span>
+              </div>
+            </aside>
+          </div>
         </div>
       </div>
+
+      <AdZone />
     </article>
   )
 }

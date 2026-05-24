@@ -3,15 +3,15 @@ import ArticleCard from '@/components/ArticleCard'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Investigação',
-  description: 'Reportagens investigativas de profundidade — corrupção, poder e sociedade.',
+  title: 'Sociedade',
+  description: 'Cobertura social de Moçambique — saúde, educação, comunidades e direitos.',
 }
 
 export const revalidate = 60
 
-export default async function InvestigacaoPage() {
+export default async function SociedadePage() {
   const articles = await prisma.article.findMany({
-    where: { section: 'Investigação' },
+    where: { section: 'Sociedade' },
     include: { author: true },
     orderBy: { publishedAt: 'desc' },
   })
@@ -25,13 +25,13 @@ export default async function InvestigacaoPage() {
         <div className="container">
           <div className="section-head">
             <div className="section-head__line" />
-            <span className="section-head__title">Jornalismo de Profundidade</span>
+            <span className="section-head__title">Sociedade</span>
           </div>
           <h1 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.4rem)', fontWeight: 900, color: 'var(--branco)', marginTop: '8px', marginBottom: '8px' }}>
-            Investigação
+            Sociedade & Cidadania
           </h1>
           <p style={{ fontSize: '0.95rem', color: 'var(--cinza)', maxWidth: '540px' }}>
-            Reportagens de fôlego, baseadas em documentos, fontes e dados. Jornalismo que cobra tempo e rigor.
+            Saúde, educação, direitos, comunidades e a vida quotidiana em Moçambique.
           </p>
         </div>
       </div>
@@ -39,7 +39,7 @@ export default async function InvestigacaoPage() {
       <div className="container" style={{ padding: '48px 24px' }}>
         {articles.length === 0 ? (
           <p style={{ color: 'var(--cinza)', textAlign: 'center', padding: '80px 0', fontSize: '1rem' }}>
-            Nenhuma investigação publicada ainda.
+            Nenhum artigo publicado nesta secção ainda.
           </p>
         ) : (
           <>

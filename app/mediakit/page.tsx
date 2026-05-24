@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import AdZone from '@/components/AdZone'
 
 export const metadata: Metadata = {
   title: 'Media Kit',
@@ -7,163 +8,124 @@ export const metadata: Metadata = {
 }
 
 const STATS = [
-  { label: 'Visitantes únicos/mês', value: '120 mil+' },
-  { label: 'Assinantes da newsletter', value: '28 mil' },
-  { label: 'Seguidores nas redes', value: '85 mil' },
-  { label: 'Tempo médio na página', value: '6 min 40s' },
+  { label: 'Visitantes únicos/mês', value: '85 mil+' },
+  { label: 'Assinantes da newsletter', value: '18 mil' },
+  { label: 'Seguidores nas redes', value: '52 mil' },
+  { label: 'Tempo médio na página', value: '5 min 20s' },
 ]
 
 const FORMATS = [
-  {
-    title: 'Branded Content',
-    desc: 'Conteúdo editorial patrocinado produzido com nosso padrão jornalístico, claramente identificado como parceria.',
-    price: 'A partir de R$ 8.000',
-  },
-  {
-    title: 'Sponsored Newsletter',
-    desc: 'Sua mensagem inserida na newsletter semanal enviada a 28 mil assinantes qualificados.',
-    price: 'A partir de R$ 3.500/edição',
-  },
-  {
-    title: 'Patrocínio de Podcast',
-    desc: 'Menção e spot no início/meio de episódios do Sonda Cast, com público altamente engajado.',
-    price: 'A partir de R$ 4.500/episódio',
-  },
-  {
-    title: 'Display Digital',
-    desc: 'Posicionamentos de display em páginas de alta visibilidade, com segmentação por editorial.',
-    price: 'CPM a partir de R$ 45',
-  },
-  {
-    title: 'Eventos e Lives',
-    desc: 'Patrocínio de eventos editoriais, debates e transmissões ao vivo com jornalistas e especialistas.',
-    price: 'Sob consulta',
-  },
-  {
-    title: 'Relatórios Especiais',
-    desc: 'Reports aprofundados sobre temas específicos com distribuição exclusiva para assinantes e stakeholders.',
-    price: 'Sob consulta',
-  },
+  { title: 'Branded Content', desc: 'Conteúdo editorial patrocinado produzido com o nosso padrão jornalístico, claramente identificado como parceria.', price: 'A partir de MZN 60.000' },
+  { title: 'Sponsored Newsletter', desc: 'A sua mensagem inserida na newsletter semanal enviada a 18 mil assinantes qualificados.', price: 'A partir de MZN 25.000/edição' },
+  { title: 'Patrocínio de Podcast', desc: 'Menção e spot no início/meio de episódios do nosso podcast, com público altamente envolvido.', price: 'A partir de MZN 30.000/episódio' },
+  { title: 'Display Digital', desc: 'Posicionamentos de display em páginas de alta visibilidade, com segmentação por editorial.', price: 'CPM a partir de MZN 300' },
+  { title: 'Eventos e Lives', desc: 'Patrocínio de eventos editoriais, debates e transmissões ao vivo com jornalistas e especialistas.', price: 'Sob consulta' },
+  { title: 'Relatórios Especiais', desc: 'Reports aprofundados sobre temas específicos com distribuição exclusiva para assinantes e parceiros.', price: 'Sob consulta' },
 ]
 
 export default function MediaKitPage() {
   return (
     <div>
       {/* Hero */}
-      <div style={{
-        background: 'linear-gradient(135deg, #0a0a0a 0%, #111 100%)',
-        borderBottom: '1px solid #1a1a1a',
-        padding: '80px 0',
-      }}>
-        <div className="container" style={{ maxWidth: '800px', textAlign: 'center' }}>
-          <img src="/logo.jpg" alt="SONDA MÍDIA" style={{ height: '56px', width: 'auto', marginBottom: '32px' }} />
-          <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '42px', fontWeight: 900, color: '#e8e8e8', marginBottom: '16px', lineHeight: '1.2' }}>
+      <div style={{ background: 'var(--carvao)', borderBottom: '1px solid var(--cinza-3)', padding: '80px 0' }}>
+        <div className="container" style={{ textAlign: 'center' }}>
+          <img src="/logo.jpg" alt="SONDA MÍDIA" style={{ height: '56px', width: 'auto', margin: '0 auto 32px', display: 'block' }} />
+          <h1 style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', fontWeight: 900, color: 'var(--branco)', marginBottom: '16px', lineHeight: 1.15 }}>
             Media Kit 2025
           </h1>
-          <p style={{ fontSize: '18px', color: '#777', lineHeight: '1.7', maxWidth: '560px', margin: '0 auto 32px' }}>
-            Alcance uma audiência qualificada de leitores engajados com jornalismo investigativo de qualidade.
+          <p style={{ fontSize: '1rem', color: 'var(--cinza)', lineHeight: 1.7, maxWidth: '540px', margin: '0 auto 32px' }}>
+            Alcance uma audiência qualificada de leitores envolvidos com jornalismo investigativo de qualidade.
           </p>
-          <a href="mailto:comercial@sondamidia.com.br" style={{
-            display: 'inline-block',
-            background: '#c9a84c',
-            color: '#0a0a0a',
-            fontSize: '14px', fontWeight: 700,
-            letterSpacing: '0.1em', textTransform: 'uppercase',
-            padding: '16px 36px', borderRadius: '2px',
-          }}>
+          <a href="mailto:comercial@sondamidia.co.mz" className="btn btn--gold">
             Falar com Comercial
           </a>
         </div>
       </div>
 
       {/* Stats */}
-      <div style={{ background: '#0d0d0d', borderBottom: '1px solid #1a1a1a', padding: '48px 0' }}>
-        <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '32px', textAlign: 'center' }}>
-            {STATS.map(s => (
-              <div key={s.label} style={{ padding: '24px', borderRight: '1px solid #1a1a1a' }}>
-                <div style={{ fontFamily: 'var(--font-serif)', fontSize: '36px', fontWeight: 900, color: '#c9a84c', marginBottom: '8px' }}>
-                  {s.value}
-                </div>
-                <div style={{ fontSize: '13px', color: '#666', letterSpacing: '0.05em' }}>{s.label}</div>
-              </div>
-            ))}
+      <div className="stats-bar" style={{ margin: '0', borderRadius: '0', border: 'none', borderBottom: '1px solid var(--cinza-3)', borderTop: '1px solid var(--cinza-3)' }}>
+        {STATS.map(s => (
+          <div key={s.label} className="stats-bar__item">
+            <span className="stats-bar__num">{s.value}</span>
+            <span className="stats-bar__label">{s.label}</span>
           </div>
-        </div>
+        ))}
       </div>
 
       {/* Audience */}
-      <div style={{ padding: '64px 0', borderBottom: '1px solid #1a1a1a' }}>
+      <div style={{ padding: '64px 0', borderBottom: '1px solid var(--cinza-3)' }}>
         <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '64px', alignItems: 'center' }}>
+          <div className="grid-2" style={{ alignItems: 'center' }}>
             <div>
-              <span className="section-label" style={{ fontSize: '11px' }}>Audiência</span>
-              <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '28px', fontWeight: 700, color: '#e0e0e0', marginTop: '8px', marginBottom: '20px' }}>
+              <div className="section-head">
+                <div className="section-head__line" />
+                <span className="section-head__title">Audiência</span>
+              </div>
+              <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--branco)', marginTop: '8px', marginBottom: '20px' }}>
                 Quem lê o SONDA MÍDIA
               </h2>
-              <p style={{ fontSize: '15px', color: '#777', lineHeight: '1.8', marginBottom: '24px' }}>
-                Nossa audiência é formada por profissionais qualificados: jornalistas, advogados, professores, gestores públicos, empresários e ativistas que buscam informação aprofundada e confiável.
+              <p style={{ fontSize: '0.9rem', color: 'var(--cinza)', lineHeight: 1.8, marginBottom: '24px' }}>
+                A nossa audiência é formada por profissionais qualificados: jornalistas, advogados, professores, gestores públicos e empresários que buscam informação aprofundada e confiável sobre Moçambique.
               </p>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div className="grid-2">
                 {[
-                  { label: 'Ensino superior completo', pct: '78%' },
-                  { label: 'Renda acima de 5 SM', pct: '61%' },
-                  { label: '25–44 anos', pct: '54%' },
-                  { label: 'São Paulo e Rio', pct: '47%' },
+                  { label: 'Ensino superior', pct: '72%' },
+                  { label: 'Classe média e alta', pct: '58%' },
+                  { label: '25–44 anos', pct: '61%' },
+                  { label: 'Maputo e Matola', pct: '54%' },
                 ].map(d => (
-                  <div key={d.label} style={{ padding: '16px', background: '#111', borderRadius: '3px', border: '1px solid #1a1a1a' }}>
-                    <div style={{ fontSize: '24px', fontWeight: 700, color: '#c9a84c', marginBottom: '4px' }}>{d.pct}</div>
-                    <div style={{ fontSize: '12px', color: '#666' }}>{d.label}</div>
+                  <div key={d.label} style={{ padding: '16px', background: 'var(--carvao)', borderRadius: '4px', border: '1px solid var(--cinza-3)' }}>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 900, color: 'var(--ouro)', marginBottom: '4px' }}>{d.pct}</div>
+                    <div style={{ fontSize: '0.72rem', color: 'var(--cinza)' }}>{d.label}</div>
                   </div>
                 ))}
               </div>
             </div>
-            <div>
-              <div style={{ padding: '32px', background: '#111', borderRadius: '4px', border: '1px solid #1a1a1a' }}>
-                <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#e0e0e0', marginBottom: '20px' }}>
-                  Distribuição por editorial
-                </h3>
-                {[
-                  { label: 'Investigação', pct: 38 },
-                  { label: 'Política & Economia', pct: 27 },
-                  { label: 'Cultura', pct: 18 },
-                  { label: 'Podcast', pct: 12 },
-                  { label: 'Outros', pct: 5 },
-                ].map(d => (
-                  <div key={d.label} style={{ marginBottom: '14px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                      <span style={{ fontSize: '13px', color: '#888' }}>{d.label}</span>
-                      <span style={{ fontSize: '13px', color: '#c9a84c', fontWeight: 600 }}>{d.pct}%</span>
-                    </div>
-                    <div style={{ height: '4px', background: '#1a1a1a', borderRadius: '2px' }}>
-                      <div style={{ height: '100%', width: `${d.pct}%`, background: '#c9a84c', borderRadius: '2px' }} />
-                    </div>
+            <div style={{ padding: '32px', background: 'var(--carvao)', borderRadius: '6px', border: '1px solid var(--cinza-3)' }}>
+              <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--branco)', marginBottom: '20px' }}>
+                Distribuição por editorial
+              </h3>
+              {[
+                { label: 'Investigação', pct: 35 },
+                { label: 'Política & Economia', pct: 30 },
+                { label: 'Internacional', pct: 18 },
+                { label: 'Multimédia', pct: 12 },
+                { label: 'Outros', pct: 5 },
+              ].map(d => (
+                <div key={d.label} style={{ marginBottom: '14px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                    <span style={{ fontSize: '0.82rem', color: 'var(--cinza)' }}>{d.label}</span>
+                    <span style={{ fontSize: '0.82rem', color: 'var(--ouro)', fontWeight: 700 }}>{d.pct}%</span>
                   </div>
-                ))}
-              </div>
+                  <div style={{ height: '4px', background: 'var(--cinza-3)', borderRadius: '2px' }}>
+                    <div style={{ height: '100%', width: `${d.pct}%`, background: 'var(--ouro)', borderRadius: '2px' }} />
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </div>
 
       {/* Formats */}
-      <div style={{ padding: '64px 0', background: '#0d0d0d', borderBottom: '1px solid #1a1a1a' }}>
+      <div style={{ padding: '64px 0', background: 'var(--carvao-2)', borderBottom: '1px solid var(--cinza-3)' }}>
         <div className="container">
           <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-            <span className="section-label" style={{ fontSize: '11px' }}>Parceria</span>
-            <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '32px', fontWeight: 700, color: '#e0e0e0', marginTop: '8px' }}>
+            <div className="section-head" style={{ justifyContent: 'center' }}>
+              <div className="section-head__line" />
+              <span className="section-head__title">Parceria</span>
+              <div className="section-head__line" />
+            </div>
+            <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--branco)', marginTop: '8px' }}>
               Formatos Disponíveis
             </h2>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
+          <div className="grid-3">
             {FORMATS.map(f => (
-              <div key={f.title} style={{
-                padding: '28px', background: '#111', borderRadius: '4px',
-                border: '1px solid #1a1a1a',
-              }}>
-                <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#e0e0e0', marginBottom: '12px' }}>{f.title}</h3>
-                <p style={{ fontSize: '14px', color: '#777', lineHeight: '1.65', marginBottom: '20px' }}>{f.desc}</p>
-                <p style={{ fontSize: '13px', fontWeight: 700, color: '#c9a84c' }}>{f.price}</p>
+              <div key={f.title} style={{ padding: '28px', background: 'var(--carvao)', borderRadius: '6px', border: '1px solid var(--cinza-3)' }}>
+                <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--branco)', marginBottom: '12px' }}>{f.title}</h3>
+                <p style={{ fontSize: '0.85rem', color: 'var(--cinza)', lineHeight: 1.65, marginBottom: '20px' }}>{f.desc}</p>
+                <p style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--ouro)' }}>{f.price}</p>
               </div>
             ))}
           </div>
@@ -172,26 +134,18 @@ export default function MediaKitPage() {
 
       {/* CTA */}
       <div style={{ padding: '80px 0', textAlign: 'center' }}>
-        <div className="container" style={{ maxWidth: '560px' }}>
-          <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '28px', fontWeight: 700, color: '#e0e0e0', marginBottom: '16px' }}>
-            Pronto para alcançar nossa audiência?
+        <div className="container container--narrow">
+          <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--branco)', marginBottom: '16px' }}>
+            Pronto para alcançar a nossa audiência?
           </h2>
-          <p style={{ fontSize: '15px', color: '#777', marginBottom: '32px' }}>
-            Nossa equipe comercial está disponível para apresentar propostas personalizadas.
+          <p style={{ fontSize: '0.95rem', color: 'var(--cinza)', marginBottom: '32px' }}>
+            A nossa equipa comercial está disponível para apresentar propostas personalizadas.
           </p>
-          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
-            <a href="mailto:comercial@sondamidia.com.br" style={{
-              background: '#c9a84c', color: '#0a0a0a',
-              fontSize: '13px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase',
-              padding: '14px 28px', borderRadius: '2px',
-            }}>
+          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <a href="mailto:comercial@sondamidia.co.mz" className="btn btn--gold">
               Enviar Proposta
             </a>
-            <Link href="/sobre#contato" style={{
-              border: '1px solid #333', color: '#aaa',
-              fontSize: '13px', fontWeight: 600,
-              padding: '14px 28px', borderRadius: '2px',
-            }}>
+            <Link href="/sobre#contato" className="btn btn--outline">
               Mais Informações
             </Link>
           </div>

@@ -1,7 +1,6 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import RadarSvg from './RadarSvg'
 
 const NAV = [
   { label: 'Home', href: '/' },
@@ -10,7 +9,7 @@ const NAV = [
   { label: 'Sociedade', href: '/sociedade' },
   { label: 'Internacional', href: '/internacional' },
   { label: 'Investigação', href: '/investigacao' },
-  { label: 'Multimédia', href: '/multimédia' },
+  { label: 'Multimédia', href: '/multimedia' },
   { label: 'Opinião', href: '/opiniao' },
 ]
 
@@ -20,11 +19,13 @@ export default function Header() {
   return (
     <header className="hdr">
       <div className="hdr__inner">
-        <Link href="/" className="hdr__logo" aria-label="SONDA MÍDIA">
-          <RadarSvg size={28} />
-          <span className="hdr__logo-text">
-            S<span className="gold">◉</span>NDA MÍDIA
-          </span>
+        <Link href="/" className="hdr__logo" aria-label="SONDA MÍDIA" style={{ padding: '0' }}>
+          <img
+            src="/logo.jpg"
+            alt="SONDA MÍDIA"
+            height={44}
+            style={{ height: '44px', width: 'auto', display: 'block' }}
+          />
         </Link>
 
         <nav className="hdr__nav">
