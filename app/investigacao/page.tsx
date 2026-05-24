@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db'
 import ArticleCard from '@/components/ArticleCard'
+import AdZone from '@/components/AdZone'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -58,6 +59,7 @@ export default async function InvestigacaoPage() {
           </>
         )}
       </div>
+      <AdZone />
     </div>
   )
 }

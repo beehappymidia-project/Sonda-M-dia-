@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db'
 import Link from 'next/link'
+import AdZone from '@/components/AdZone'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -66,6 +67,7 @@ export default async function GaleriaPage() {
           </div>
         )}
       </div>
+      <AdZone />
     </div>
   )
 }
