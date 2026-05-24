@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Article {
+  id          Int      @id @default(autoincrement())
+  slug        String   @unique
+  title       String
+  lead        String
+  body        String
+  section     String
+  format      String   @default("REPORTAGEM")
+  readTime    Int      @default(5)
+  photoStyle  String   @default("protest")
+  authorId    Int
+  author      Author   @relation(fields: [authorId], references: [id])
+  publishedAt DateTime @default(now())
+  featured    Boolean  @default(false)
+  isLongForm  Boolean  @default(false)
+  isVideo     Boolean  @default(false)
+  isPodcast   Boolean  @default(false)
+  isGallery   Boolean  @default(false)
+  isOpinion   Boolean  @default(false)
+  tags        String   @default("")
+}
+
+model Author {
+  id          Int       @id @default(autoincrement())
+  slug        String    @unique
+  name        String
+  role        String
+  bio         String
+  email       String?
+  twitter     String?
+  linkedin    String?
+  articles    Article[]
+}
+
+model Newsletter {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}

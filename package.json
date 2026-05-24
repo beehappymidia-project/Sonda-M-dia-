@@ -1,0 +1,26 @@
+{
+  "name": "sonda-midia",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && prisma db push && npx tsx prisma/seed.ts && next build",
+    "build:prod": "prisma generate && prisma migrate deploy && npx tsx prisma/seed.ts && next build",
+    "start": "next start",
+    "db:seed": "npx tsx prisma/seed.ts",
+    "db:push": "prisma db push"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "next": "14.2.18",
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "prisma": "^5.22.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5"
+  }
+}
